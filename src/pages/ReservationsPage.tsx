@@ -82,7 +82,7 @@ export const ReservationsPage: React.FC = () => {
           start: res.startTime.toDate(),
           end: res.endTime.toDate(),
           backgroundColor: res.status === 'approved' ? (selectedLab?.color || '#10b981') : '#f59e0b',
-          borderColor: 'transparent',
+          className: res.status === 'approved' ? 'shadow-lg shadow-emerald-500/10' : 'shadow-lg shadow-amber-500/10',
           extendedProps: { type: 'booked', ...res }
         });
       });
@@ -92,10 +92,13 @@ export const ReservationsPage: React.FC = () => {
     for (let i = 0; i < 14; i++) {
       const currentDate = addDays(today, i);
       const dateStr = format(currentDate, 'yyyy-MM-dd');
+      const dayName = format(currentDate, 'EEEE');
 
-      timeSlots.forEach(slot => {
-        const start = new Date(`${dateStr}T${slot.startTime}`);
-        const end = new Date(`${dateStr}T${slot.endTime}`);
+      timeSlots
+        .filter(slot => !slot.day || slot.day === dayName)
+        .forEach(slot => {
+          const start = new Date(`${dateStr}T${slot.startTime}`);
+          const end = new Date(`${dateStr}T${slot.endTime}`);
 
         // Check if this slot is already booked or pending
         const isBooked = reservations.some(r => 
@@ -110,10 +113,7 @@ export const ReservationsPage: React.FC = () => {
             title: 'Available',
             start: start,
             end: end,
-            backgroundColor: 'rgba(16, 185, 129, 0.1)',
-            borderColor: '#10b981',
-            textColor: '#10b981',
-            className: 'cursor-pointer hover:bg-emerald-500/20',
+            className: 'available-slot',
             extendedProps: { 
               type: 'available',
               date: dateStr,

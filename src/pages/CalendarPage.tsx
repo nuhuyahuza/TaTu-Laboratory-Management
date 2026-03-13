@@ -31,7 +31,7 @@ export const CalendarPage: React.FC = () => {
             start: res.startTime.toDate(),
             end: res.endTime.toDate(),
             backgroundColor: lab?.color || '#3b82f6',
-            borderColor: lab?.color || '#3b82f6',
+            className: 'shadow-lg shadow-black/5',
             extendedProps: {
               student: res.studentName,
               course: res.course,

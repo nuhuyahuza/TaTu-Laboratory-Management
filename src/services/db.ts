@@ -14,7 +14,7 @@ import {
   limit
 } from 'firebase/firestore';
 import { db } from '../firebase/config';
-import { Laboratory, Equipment, EquipmentRequest, LabReservation, TimeSlot, UserProfile, Department, Notification } from '../models/types';
+import { Laboratory, Equipment, EquipmentRequest, LabReservation, TimeSlot, UserProfile, Department, Notification, WorkingHours } from '../models/types';
 
 // Notifications
 export const notificationService = {
@@ -179,6 +179,27 @@ export const timeSlotService = {
     },
     delete: async (id: string) => {
         return deleteDoc(doc(db, 'timeSlots', id));
+    },
+    bulkAdd: async (slots: Omit<TimeSlot, 'id'>[]) => {
+      const promises = slots.map(slot => addDoc(collection(db, 'timeSlots'), slot));
+      return Promise.all(promises);
+    }
+};
+
+// Working Hours
+export const workingHoursService = {
+    getAll: async () => {
+      const snapshot = await getDocs(collection(db, 'workingHours'));
+      return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as WorkingHours));
+    },
+    add: async (wh: Omit<WorkingHours, 'id'>) => {
+      return addDoc(collection(db, 'workingHours'), wh);
+    },
+    update: async (id: string, wh: Partial<WorkingHours>) => {
+      return updateDoc(doc(db, 'workingHours', id), wh);
+    },
+    delete: async (id: string) => {
+      return deleteDoc(doc(db, 'workingHours', id));
     }
 };
 

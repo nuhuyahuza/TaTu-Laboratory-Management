@@ -99,50 +99,97 @@ body {
 
 /* FullCalendar Customization */
 .fc {
-  @apply font-sans;
+  @apply font-sans border-none;
+  --fc-border-color: rgba(226, 232, 240, 0.5);
+  --fc-today-bg-color: rgba(16, 185, 129, 0.03);
+  --fc-now-indicator-color: #10b981;
+}
+
+.dark .fc {
+  --fc-border-color: rgba(30, 41, 59, 0.5);
+  --fc-today-bg-color: rgba(16, 185, 129, 0.05);
 }
 
 .fc .fc-toolbar-title {
-  @apply text-xl font-bold text-gray-900;
+  @apply text-2xl font-black text-slate-900 tracking-tighter;
 }
 
 .dark .fc .fc-toolbar-title {
-  @apply text-gray-100;
+  @apply text-white;
 }
 
 .fc .fc-button {
-  @apply bg-white border-gray-200 text-gray-700 font-medium px-4 py-2 rounded-xl hover:bg-gray-50 hover:text-gray-900 transition-colors shadow-sm;
-}
-
-.dark .fc .fc-button {
-  @apply bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700 hover:text-white;
+  @apply bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 font-black text-[10px] uppercase tracking-widest px-5 py-2.5 rounded-xl hover:bg-emerald-600 hover:text-white hover:border-emerald-600 transition-all shadow-sm active:scale-95;
 }
 
 .fc .fc-button-primary:not(:disabled).fc-button-active, 
 .fc .fc-button-primary:not(:disabled):active {
-  @apply bg-emerald-600 border-emerald-600 text-white;
+  @apply bg-emerald-600 border-emerald-600 text-white shadow-lg shadow-emerald-600/20;
 }
 
 .fc .fc-col-header-cell {
-  @apply bg-gray-50 py-3 text-gray-500 font-semibold text-xs uppercase tracking-wider border-gray-100;
+  @apply bg-slate-50/50 dark:bg-slate-900/50 py-4 text-slate-600 dark:text-slate-300 font-black text-[10px] uppercase tracking-[0.2em] border-slate-100 dark:border-slate-800/50;
 }
 
-.dark .fc .fc-col-header-cell {
-  @apply bg-slate-900 text-slate-400 border-slate-800;
+.fc .fc-timegrid-slot {
+  @apply h-12 border-slate-100 dark:border-slate-800/30;
+}
+
+.fc .fc-timegrid-slot-label-cushion {
+  @apply text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest;
+}
+
+.fc .fc-timegrid-axis-cushion {
+  @apply text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest;
 }
 
 .fc td, .fc th {
-  @apply border-gray-100;
+  @apply border-slate-100 dark:border-slate-800/30;
 }
 
-.dark .fc td, .dark .fc th {
-  @apply border-slate-800;
+.fc .fc-scrollgrid {
+  @apply border-none rounded-2xl overflow-hidden;
 }
 
 .fc-event {
-  @apply rounded-lg border-none p-1 shadow-sm cursor-pointer transition-transform hover:scale-[1.02];
+  @apply rounded-xl border-none p-1.5 shadow-md cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-xl;
+}
+
+.fc-event-main {
+  @apply p-1;
 }
 
 .fc-event-title {
-  @apply font-semibold text-xs;
+  @apply font-black text-[10px] uppercase tracking-wider leading-tight text-white;
 }
+
+.fc-event-time {
+  @apply font-bold text-[9px] opacity-90 mb-0.5 text-white;
+}
+
+/* Now Indicator */
+.fc .fc-now-indicator-line {
+  @apply border-emerald-500 border-t-2;
+}
+
+.fc .fc-now-indicator-arrow {
+  @apply border-emerald-500 border-8 -mt-2;
+  border-top-color: transparent !important;
+  border-bottom-color: transparent !important;
+  border-right-color: transparent !important;
+}
+
+/* Available slots styling */
+.fc-v-event.available-slot {
+  @apply bg-emerald-500/5 dark:bg-emerald-500/10 border border-dashed border-emerald-500/40 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-500/15 transition-all shadow-none;
+}
+
+.fc-v-event.available-slot .fc-event-main {
+  @apply flex items-center justify-center;
+}
+
+.fc-v-event.available-slot .fc-event-title {
+  @apply text-emerald-700 dark:text-emerald-300 opacity-100 font-black text-[9px] uppercase tracking-[0.2em];
+}
+
+

@@ -68,6 +68,14 @@ export interface TimeSlot {
   id: string;
   startTime: string; // e.g. "07:00"
   endTime: string;   // e.g. "08:00"
+  day?: string;      // e.g. "Monday", "Tuesday", etc.
+}
+
+export interface WorkingHours {
+  id: string;
+  startTime: string;
+  endTime: string;
+  days: string[];
 }
 
 export interface Department {
