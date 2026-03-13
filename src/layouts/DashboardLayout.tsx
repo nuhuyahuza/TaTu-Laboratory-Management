@@ -110,7 +110,7 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
               <div className="w-10 h-10 bg-emerald-600 rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-500/30 rotate-3 group-hover:rotate-12 transition-transform duration-500">
                 <span className="font-black text-2xl text-white">T</span>
               </div>
-              <span className="font-black text-2xl tracking-tighter text-gradient">TTU Lab</span>
+              <span className="font-black text-2xl tracking-tighter text-gradient">TaTU Lab</span>
             </div>
           )}
           <button 

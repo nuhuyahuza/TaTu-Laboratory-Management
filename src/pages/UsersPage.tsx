@@ -201,7 +201,7 @@ export const UsersPage: React.FC = () => {
                   value={formData.email}
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
                   className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800/50 border-none rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all dark:text-white font-medium"
-                  placeholder="name@ttu.edu.gh"
+                  placeholder="name@TaTU.edu.gh"
                 />
               </div>
               <div>
@@ -278,7 +278,7 @@ export const UsersPage: React.FC = () => {
                 value={bulkText}
                 onChange={(e) => setBulkText(e.target.value)}
                 className="w-full h-64 px-5 py-4 bg-slate-50 dark:bg-slate-800/50 border-none rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none font-mono text-sm transition-all dark:text-white"
-                placeholder="John Doe, john@ttu.edu.gh, pass123, student, IT&#10;Jane Smith, jane@ttu.edu.gh, pass456, lecturer, Engineering"
+                placeholder="John Doe, john@TaTU.edu.gh, pass123, student, IT&#10;Jane Smith, jane@TaTU.edu.gh, pass456, lecturer, Engineering"
               />
               <div className="pt-4">
                 <button 

@@ -75,7 +75,7 @@ export const SetupPage: React.FC = () => {
           System Initialization
         </h2>
         <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-          Create the primary administrator account for TTU Lab Manager
+          Create the primary administrator account for TaTU Lab Manager
         </p>
       </div>
 
@@ -132,7 +132,7 @@ export const SetupPage: React.FC = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="appearance-none block w-full pl-10 px-3 py-3 border border-gray-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm"
-                    placeholder="admin@ttu.edu.gh"
+                    placeholder="admin@TaTU.edu.gh"
                   />
                 </div>
               </div>

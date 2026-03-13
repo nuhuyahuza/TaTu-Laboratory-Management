@@ -65,7 +65,7 @@ export const LoginPage: React.FC = () => {
           <FlaskConical className="text-white" size={32} />
         </div>
         <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-          TTU Lab Manager
+          TaTU Lab Manager
         </h2>
         <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
           IT Department Laboratory Management System
@@ -94,7 +94,7 @@ export const LoginPage: React.FC = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="appearance-none block w-full pl-10 px-3 py-3 border border-gray-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm"
-                  placeholder="name@ttu.edu.gh"
+                  placeholder="name@TaTU.edu.gh"
                 />
               </div>
             </div>
