@@ -52,19 +52,21 @@ export const CalendarPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-10">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Lab Schedule</h1>
-          <p className="text-gray-500 dark:text-gray-400">Visual overview of laboratory reservations and availability.</p>
+          <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter">
+            Lab <span className="text-gradient">Schedule</span>
+          </h1>
+          <p className="text-slate-500 dark:text-slate-400 font-medium text-lg">Visual overview of laboratory reservations and availability.</p>
         </div>
       </div>
 
       {loading ? (
-        <div className="flex justify-center py-12"><Loader2 className="animate-spin text-emerald-600" /></div>
+        <div className="flex justify-center py-20"><Loader2 className="animate-spin text-emerald-600" size={40} /></div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          <div className="lg:col-span-3 bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 transition-colors">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-10">
+          <div className="lg:col-span-3 premium-card p-8">
             <FullCalendar
               plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
               initialView="timeGridWeek"
@@ -87,45 +89,50 @@ export const CalendarPage: React.FC = () => {
             />
           </div>
 
-          <div className="space-y-6">
-            <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 transition-colors">
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center">
-                <Info size={20} className="mr-2 text-emerald-600 dark:text-emerald-400" />
+          <div className="space-y-8">
+            <div className="premium-card p-8">
+              <h3 className="text-xl font-black text-slate-900 dark:text-white mb-6 tracking-tight flex items-center">
+                <Info size={22} className="mr-2 text-emerald-600 dark:text-emerald-400" />
                 Event Details
               </h3>
               {selectedEvent ? (
-                <div className="space-y-4">
+                <div className="space-y-6">
                   <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider">Laboratory</p>
-                    <p className="text-gray-900 dark:text-white font-medium">{selectedEvent.extendedProps.lab}</p>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-black tracking-widest mb-1">Laboratory</p>
+                    <p className="text-slate-900 dark:text-white font-bold">{selectedEvent.extendedProps.lab}</p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider">Course</p>
-                    <p className="text-gray-900 dark:text-white font-medium">{selectedEvent.extendedProps.course}</p>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-black tracking-widest mb-1">Course</p>
+                    <p className="text-slate-900 dark:text-white font-bold">{selectedEvent.extendedProps.course}</p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider">Reserved By</p>
-                    <p className="text-gray-900 dark:text-white font-medium">{selectedEvent.extendedProps.student}</p>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-black tracking-widest mb-1">Reserved By</p>
+                    <p className="text-slate-900 dark:text-white font-bold">{selectedEvent.extendedProps.student}</p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider">Time</p>
-                    <p className="text-gray-900 dark:text-white font-medium">
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-black tracking-widest mb-1">Time</p>
+                    <p className="text-slate-900 dark:text-white font-bold">
                       {format(selectedEvent.start, 'HH:mm')} - {format(selectedEvent.end, 'HH:mm')}
                     </p>
                   </div>
                 </div>
               ) : (
-                <p className="text-gray-500 dark:text-gray-400 text-sm italic">Click an event on the calendar to see details.</p>
+                <div className="text-center py-8">
+                  <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Info size={24} className="text-slate-400" />
+                  </div>
+                  <p className="text-slate-500 dark:text-slate-400 text-sm font-medium italic">Click an event on the calendar to see details.</p>
+                </div>
               )}
             </div>
 
-            <div className="bg-emerald-50 dark:bg-emerald-900/20 p-6 rounded-2xl border border-emerald-100 dark:border-emerald-900/30">
-              <h4 className="text-emerald-800 dark:text-emerald-300 font-bold mb-2">Calendar Legend</h4>
-              <p className="text-emerald-700 dark:text-emerald-400 text-xs mb-4">Each laboratory is represented by a unique color assigned by the administrator.</p>
-              <div className="space-y-2">
-                <div className="flex items-center space-x-2">
-                  <div className="w-3 h-3 rounded-full bg-emerald-600"></div>
-                  <span className="text-xs text-emerald-800 dark:text-emerald-300 font-medium">Approved Reservations</span>
+            <div className="glass dark:glass-dark p-8 rounded-[2rem] border border-white/20 shadow-xl shadow-black/5">
+              <h4 className="text-slate-900 dark:text-white font-black uppercase tracking-widest text-[10px] mb-6">Calendar Legend</h4>
+              <p className="text-slate-500 dark:text-slate-400 text-xs mb-8 font-medium leading-relaxed">Each laboratory is represented by a unique color assigned by the administrator.</p>
+              <div className="space-y-4">
+                <div className="flex items-center space-x-4 p-3 bg-white/50 dark:bg-white/5 rounded-2xl border border-white/10">
+                  <div className="w-5 h-5 rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/20"></div>
+                  <span className="text-[10px] text-slate-700 dark:text-slate-300 font-black uppercase tracking-widest">Approved Reservations</span>
                 </div>
               </div>
             </div>

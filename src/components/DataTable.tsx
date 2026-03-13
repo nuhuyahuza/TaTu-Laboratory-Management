@@ -92,21 +92,21 @@ export function DataTable<T extends { id: string }>({
   return (
     <div className="space-y-4">
       {/* Table Header Controls */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-slate-900 p-4 rounded-2xl border border-gray-100 dark:border-slate-800 transition-colors">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 glass dark:glass-dark p-4 rounded-2xl shadow-xl shadow-black/5">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
           <input
             type="text"
             placeholder={searchPlaceholder}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-slate-800 border-none rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 dark:text-white transition-all"
+            className="w-full pl-12 pr-4 py-3 bg-slate-100/50 dark:bg-slate-800/50 border border-white/10 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 dark:text-white transition-all font-medium"
           />
         </div>
         <div className="flex items-center space-x-2">
           <button 
             onClick={() => setIsExportModalOpen(true)}
-            className="flex items-center space-x-2 px-4 py-2 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 rounded-xl hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition-colors text-sm font-medium"
+            className="flex items-center space-x-2 px-6 py-3 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl hover:bg-emerald-500/20 transition-all text-sm font-black uppercase tracking-widest"
           >
             <Download size={18} />
             <span>Export</span>
@@ -115,20 +115,20 @@ export function DataTable<T extends { id: string }>({
       </div>
 
       {/* Table Content */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 overflow-hidden transition-colors">
-        <div className="overflow-x-auto">
+      <div className="glass dark:glass-dark rounded-[2rem] overflow-hidden shadow-2xl shadow-black/5 border border-white/10">
+        <div className="overflow-x-auto scrollbar-hide">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-gray-50 dark:bg-slate-800/50 border-b border-gray-100 dark:border-slate-800">
+              <tr className="bg-white/5 border-b border-white/10">
                 {columns.map((col) => (
-                  <th key={col.key} className="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th key={col.key} className="px-8 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">
                     {col.header}
                   </th>
                 ))}
-                {actions && <th className="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider text-right">Actions</th>}
+                {actions && <th className="px-8 py-5 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest text-right">Actions</th>}
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100 dark:divide-slate-800">
+            <tbody className="divide-y divide-white/5">
               <AnimatePresence mode="wait">
                 {paginatedData.map((item) => (
                   <motion.tr
@@ -137,18 +137,18 @@ export function DataTable<T extends { id: string }>({
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     onClick={() => onRowClick?.(item)}
-                    className={`${onRowClick ? 'cursor-pointer' : ''} hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors group`}
+                    className={`${onRowClick ? 'cursor-pointer' : ''} hover:bg-white/5 transition-all group relative`}
                   >
                     {columns.map((col) => (
-                      <td key={col.key} className="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
+                      <td key={col.key} className="px-8 py-5 text-sm font-medium text-slate-600 dark:text-slate-300">
                         {typeof col.accessor === 'function' 
                           ? col.accessor(item) 
                           : (item[col.accessor as keyof T] as React.ReactNode)}
                       </td>
                     ))}
                     {actions && (
-                      <td className="px-6 py-4 text-right">
-                        <div className="flex justify-end opacity-0 group-hover:opacity-100 transition-opacity">
+                      <td className="px-8 py-5 text-right">
+                        <div className="flex justify-end opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
                           {actions(item)}
                         </div>
                       </td>
@@ -158,8 +158,13 @@ export function DataTable<T extends { id: string }>({
               </AnimatePresence>
               {paginatedData.length === 0 && (
                 <tr>
-                  <td colSpan={columns.length + (actions ? 1 : 0)} className="px-6 py-12 text-center text-gray-500 dark:text-gray-400 italic">
-                    No records found matching your search.
+                  <td colSpan={columns.length + (actions ? 1 : 0)} className="px-8 py-20 text-center">
+                    <div className="flex flex-col items-center">
+                      <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-4 text-slate-400">
+                        <Search size={24} />
+                      </div>
+                      <p className="text-slate-500 dark:text-slate-400 font-bold tracking-tight">No records found matching your search.</p>
+                    </div>
                   </td>
                 </tr>
               )}
@@ -169,27 +174,27 @@ export function DataTable<T extends { id: string }>({
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="px-6 py-4 bg-gray-50 dark:bg-slate-800/50 border-t border-gray-100 dark:border-slate-800 flex items-center justify-between">
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              Showing <span className="font-medium text-gray-900 dark:text-white">{(currentPage - 1) * itemsPerPage + 1}</span> to <span className="font-medium text-gray-900 dark:text-white">{Math.min(currentPage * itemsPerPage, filteredData.length)}</span> of <span className="font-medium text-gray-900 dark:text-white">{filteredData.length}</span> results
+          <div className="px-8 py-6 bg-white/5 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">
+              Showing <span className="text-slate-900 dark:text-white">{(currentPage - 1) * itemsPerPage + 1}</span> to <span className="text-slate-900 dark:text-white">{Math.min(currentPage * itemsPerPage, filteredData.length)}</span> of <span className="text-slate-900 dark:text-white">{filteredData.length}</span> results
             </p>
             <div className="flex items-center space-x-2">
               <button
                 onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                 disabled={currentPage === 1}
-                className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-700 disabled:opacity-50 transition-colors"
+                className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-emerald-600 disabled:opacity-30 transition-all"
               >
-                <ChevronLeft size={20} className="dark:text-white" />
+                <ChevronLeft size={18} />
               </button>
               <div className="flex items-center space-x-1">
                 {[...Array(totalPages)].map((_, i) => (
                   <button
                     key={i}
                     onClick={() => setCurrentPage(i + 1)}
-                    className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
+                    className={`w-10 h-10 rounded-xl text-xs font-black transition-all ${
                       currentPage === i + 1 
-                        ? 'bg-emerald-600 text-white' 
-                        : 'hover:bg-gray-200 dark:hover:bg-slate-700 dark:text-white'
+                        ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/30' 
+                        : 'bg-slate-100 dark:bg-slate-800 text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700'
                     }`}
                   >
                     {i + 1}
@@ -199,9 +204,9 @@ export function DataTable<T extends { id: string }>({
               <button
                 onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                 disabled={currentPage === totalPages}
-                className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-700 disabled:opacity-50 transition-colors"
+                className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-emerald-600 disabled:opacity-30 transition-all"
               >
-                <ChevronRight size={20} className="dark:text-white" />
+                <ChevronRight size={18} />
               </button>
             </div>
           </div>

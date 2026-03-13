@@ -118,6 +118,7 @@ export const requestService = {
         await updateDoc(equipRef, {
           availableQuantity: increment(quantity)
         });
+        return updateDoc(doc(db, 'equipmentRequests', id), { status, returned: true });
     }
 
     // Create notification for student
@@ -129,6 +130,9 @@ export const requestService = {
     });
 
     return updateDoc(doc(db, 'equipmentRequests', id), { status });
+  },
+  markPickedUp: async (id: string) => {
+    return updateDoc(doc(db, 'equipmentRequests', id), { pickedUp: true });
   }
 };
 

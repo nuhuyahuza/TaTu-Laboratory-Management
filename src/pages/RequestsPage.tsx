@@ -73,12 +73,17 @@ export const RequestsPage: React.FC = () => {
     fetchData();
   };
 
+  const handleMarkPickedUp = async (id: string) => {
+    await requestService.markPickedUp(id);
+    fetchData();
+  };
+
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'approved': return <span className="px-2 py-1 bg-emerald-50 text-emerald-700 rounded-full text-xs font-medium">Approved</span>;
-      case 'rejected': return <span className="px-2 py-1 bg-red-50 text-red-700 rounded-full text-xs font-medium">Rejected</span>;
-      case 'completed': return <span className="px-2 py-1 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 rounded-full text-xs font-medium">Completed</span>;
-      default: return <span className="px-2 py-1 bg-orange-50 text-orange-700 rounded-full text-xs font-medium">Pending</span>;
+      case 'approved': return <span className="px-3 py-1 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 rounded-full text-[10px] font-black uppercase tracking-widest">Approved</span>;
+      case 'rejected': return <span className="px-3 py-1 bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20 rounded-full text-[10px] font-black uppercase tracking-widest">Rejected</span>;
+      case 'completed': return <span className="px-3 py-1 bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 rounded-full text-[10px] font-black uppercase tracking-widest">Completed</span>;
+      default: return <span className="px-3 py-1 bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 rounded-full text-[10px] font-black uppercase tracking-widest">Pending</span>;
     }
   };
 
@@ -87,13 +92,13 @@ export const RequestsPage: React.FC = () => {
       header: 'Equipment',
       key: 'equipmentName',
       accessor: (req: EquipmentRequest) => (
-        <div className="flex items-center space-x-3">
-          <div className="p-2 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 rounded-lg">
-            <HardDrive size={18} />
+        <div className="flex items-center space-x-4">
+          <div className="w-10 h-10 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center shadow-sm">
+            <HardDrive size={20} />
           </div>
           <div>
-            <p className="font-medium text-gray-900 dark:text-white">{req.equipmentName}</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400">{req.course}</p>
+            <p className="font-bold text-slate-900 dark:text-white tracking-tight">{req.equipmentName}</p>
+            <p className="text-[10px] text-slate-500 dark:text-slate-400 font-black uppercase tracking-widest">{req.course}</p>
           </div>
         </div>
       )
@@ -103,18 +108,20 @@ export const RequestsPage: React.FC = () => {
       key: 'studentName',
       accessor: (req: EquipmentRequest) => (
         <div className="flex items-center space-x-2">
-          <User size={16} className="text-gray-400" />
-          <span className="text-sm text-gray-600 dark:text-gray-400">{req.studentName}</span>
+          <div className="w-6 h-6 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center">
+            <User size={12} className="text-slate-500" />
+          </div>
+          <span className="text-sm text-slate-600 dark:text-slate-400 font-bold">{req.studentName}</span>
         </div>
       )
     },
-    { header: 'Quantity', key: 'quantity', accessor: (req: EquipmentRequest) => req.quantity },
+    { header: 'Qty', key: 'quantity', accessor: (req: EquipmentRequest) => <span className="font-black text-slate-900 dark:text-white">{req.quantity}</span> },
     {
       header: 'Duration',
       key: 'startTime',
       accessor: (req: EquipmentRequest) => (
-        <div className="flex items-center space-x-2 text-xs text-gray-500 dark:text-gray-400">
-          <Clock size={14} />
+        <div className="flex items-center space-x-2 text-[11px] text-slate-500 dark:text-slate-400 font-bold">
+          <Clock size={14} className="text-emerald-500" />
           <span>{format(req.startTime.toDate(), 'MMM d, HH:mm')} - {format(req.endTime.toDate(), 'HH:mm')}</span>
         </div>
       )
@@ -127,25 +134,27 @@ export const RequestsPage: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-10">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Equipment Requests</h1>
-          <p className="text-gray-500 dark:text-gray-400">Manage borrowing requests and equipment tracking.</p>
+          <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter">
+            Equipment <span className="text-gradient">Requests</span>
+          </h1>
+          <p className="text-slate-500 dark:text-slate-400 font-medium text-lg">Manage borrowing requests and equipment tracking.</p>
         </div>
         {isStudent && (
           <button 
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center space-x-2 bg-emerald-600 text-white px-4 py-2 rounded-xl hover:bg-emerald-700 transition-colors font-medium shadow-sm"
+            className="flex items-center space-x-2 bg-emerald-600 text-white px-6 py-3 rounded-2xl hover:bg-emerald-700 transition-all font-bold shadow-lg shadow-emerald-600/20 active:scale-95"
           >
-            <Plus size={20} />
+            <Plus size={20} strokeWidth={3} />
             <span>New Request</span>
           </button>
         )}
       </div>
 
       {loading ? (
-        <div className="flex justify-center py-12"><Loader2 className="animate-spin text-emerald-600" /></div>
+        <div className="flex justify-center py-20"><Loader2 className="animate-spin text-emerald-600" size={40} /></div>
       ) : (
         <DataTable 
           data={requests}
@@ -157,27 +166,35 @@ export const RequestsPage: React.FC = () => {
                 <>
                   <button 
                     onClick={() => handleStatusUpdate(req.id, 'approved', req.equipmentId, req.quantity)}
-                    className="p-2 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-lg transition-colors"
+                    className="w-9 h-9 flex items-center justify-center text-emerald-600 bg-emerald-500/10 hover:bg-emerald-500/20 rounded-xl transition-all active:scale-90"
                     title="Approve"
                   >
                     <CheckCircle2 size={20} />
                   </button>
                   <button 
                     onClick={() => handleStatusUpdate(req.id, 'rejected', req.equipmentId, req.quantity)}
-                    className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                    className="w-9 h-9 flex items-center justify-center text-red-600 bg-red-500/10 hover:bg-red-500/20 rounded-xl transition-all active:scale-90"
                     title="Reject"
                   >
                     <XCircle size={20} />
                   </button>
                 </>
               )}
-              {req.status === 'approved' && !req.returned && (
-                   <button 
-                   onClick={() => handleStatusUpdate(req.id, 'completed', req.equipmentId, req.quantity)}
-                   className="text-emerald-600 dark:text-emerald-400 text-xs font-semibold hover:underline"
-                 >
-                   Mark Returned
-                 </button>
+              {req.status === 'approved' && !req.pickedUp && (
+                <button 
+                  onClick={() => handleMarkPickedUp(req.id)}
+                  className="px-3 py-1 bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-blue-500/20 transition-all"
+                >
+                  Mark Picked Up
+                </button>
+              )}
+              {req.status === 'approved' && req.pickedUp && !req.returned && (
+                 <button 
+                 onClick={() => handleStatusUpdate(req.id, 'completed', req.equipmentId, req.quantity)}
+                 className="px-3 py-1 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-emerald-500/20 transition-all"
+               >
+                 Mark Returned
+               </button>
               )}
             </div>
           ) : null}
@@ -186,22 +203,22 @@ export const RequestsPage: React.FC = () => {
 
       {/* Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-gray-100 dark:border-slate-800 transition-colors">
-            <div className="p-6 border-b border-gray-100 dark:border-slate-800 flex justify-between items-center">
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white">Request Equipment</h3>
-              <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/40 backdrop-blur-md">
+          <div className="glass dark:glass-dark rounded-[2.5rem] shadow-2xl w-full max-w-md overflow-hidden border border-white/20 dark:border-white/10 transition-all animate-in fade-in zoom-in duration-300">
+            <div className="p-8 border-b border-white/10 dark:border-white/5 flex justify-between items-center bg-white/5">
+              <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Request Equipment</h3>
+              <button onClick={() => setIsModalOpen(false)} className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
                 <Plus size={24} className="rotate-45" />
               </button>
             </div>
-            <form onSubmit={handleSubmit} className="p-6 space-y-4">
+            <form onSubmit={handleSubmit} className="p-8 space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Equipment</label>
+                <label className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2 ml-1">Equipment</label>
                 <select 
                   required
                   value={formData.equipmentId}
                   onChange={(e) => setFormData({...formData, equipmentId: e.target.value})}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none transition-colors"
+                  className="w-full px-5 py-3 bg-white/50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 dark:text-white rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-medium"
                 >
                   <option value="">Select Equipment</option>
                   {equipment.filter(e => e.availableQuantity > 0).map(e => (
@@ -209,59 +226,59 @@ export const RequestsPage: React.FC = () => {
                   ))}
                 </select>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Quantity</label>
+                  <label className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2 ml-1">Quantity</label>
                   <input 
                     type="number" 
                     required
                     min="1"
                     value={formData.quantity}
                     onChange={(e) => setFormData({...formData, quantity: parseInt(e.target.value)})}
-                    className="w-full px-4 py-2 border border-gray-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none transition-colors"
+                    className="w-full px-5 py-3 bg-white/50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 dark:text-white rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-medium"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Course Code</label>
+                  <label className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2 ml-1">Course Code</label>
                   <input 
                     type="text" 
                     required
                     value={formData.course}
                     onChange={(e) => setFormData({...formData, course: e.target.value})}
-                    className="w-full px-4 py-2 border border-gray-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none transition-colors"
+                    className="w-full px-5 py-3 bg-white/50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 dark:text-white rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-medium"
                     placeholder="e.g. IT 302"
                   />
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Start Time</label>
+                  <label className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2 ml-1">Start Time</label>
                   <input 
                     type="datetime-local" 
                     required
                     value={formData.startTime}
                     onChange={(e) => setFormData({...formData, startTime: e.target.value})}
-                    className="w-full px-4 py-2 border border-gray-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none transition-colors"
+                    className="w-full px-5 py-3 bg-white/50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 dark:text-white rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-medium"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">End Time</label>
+                  <label className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2 ml-1">End Time</label>
                   <input 
                     type="datetime-local" 
                     required
                     value={formData.endTime}
                     onChange={(e) => setFormData({...formData, endTime: e.target.value})}
-                    className="w-full px-4 py-2 border border-gray-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none transition-colors"
+                    className="w-full px-5 py-3 bg-white/50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 dark:text-white rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-medium"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Purpose</label>
+                <label className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2 ml-1">Purpose</label>
                 <textarea 
                   required
                   value={formData.purpose}
                   onChange={(e) => setFormData({...formData, purpose: e.target.value})}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none transition-colors"
+                  className="w-full px-5 py-3 bg-white/50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 dark:text-white rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-medium"
                   rows={3}
                   placeholder="Why do you need this equipment?"
                 />
@@ -269,7 +286,7 @@ export const RequestsPage: React.FC = () => {
               <div className="pt-4">
                 <button 
                   type="submit"
-                  className="w-full bg-emerald-600 text-white py-3 rounded-xl font-semibold hover:bg-emerald-700 transition-colors shadow-sm"
+                  className="w-full bg-emerald-600 text-white py-4 rounded-2xl font-black uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-600/20 active:scale-[0.98]"
                 >
                   Submit Request
                 </button>

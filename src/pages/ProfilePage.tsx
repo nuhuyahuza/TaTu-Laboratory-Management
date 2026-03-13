@@ -113,11 +113,11 @@ export const ProfilePage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-4xl mx-auto space-y-10">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">Account Settings</h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1">Manage your personal information and security preferences.</p>
+          <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter">Account Settings</h1>
+          <p className="text-slate-500 dark:text-slate-400 font-medium">Manage your personal information and security preferences.</p>
         </div>
       </div>
 
@@ -125,81 +125,91 @@ export const ProfilePage: React.FC = () => {
         <motion.div 
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className={`p-4 rounded-2xl flex items-center space-x-3 ${
+          className={`p-5 rounded-3xl flex items-center space-x-3 border ${
             message.type === 'success' 
-              ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800' 
-              : 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 border border-red-100 dark:border-red-800'
+              ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20' 
+              : 'bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/20'
           }`}
         >
           {message.type === 'success' ? <CheckCircle2 size={20} /> : <AlertCircle size={20} />}
-          <span className="font-medium">{message.text}</span>
+          <span className="font-bold tracking-tight">{message.text}</span>
         </motion.div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
         {/* Profile Card */}
         <div className="lg:col-span-1 space-y-6">
-          <div className="bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-800 text-center transition-colors">
-            <div className="relative inline-block mb-6">
-              <div className="w-32 h-32 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center text-4xl font-bold border-4 border-white dark:border-slate-800 shadow-xl overflow-hidden">
+          <div className="premium-card p-8 text-center">
+            <div className="relative inline-block mb-8">
+              <div className="w-32 h-32 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center text-4xl font-black border-4 border-white dark:border-slate-800 shadow-2xl overflow-hidden">
                 {profile?.photoURL ? (
                   <img src={profile.photoURL} alt={profile.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                 ) : (
                   profile?.name?.charAt(0)
                 )}
               </div>
-              <label className="absolute bottom-0 right-0 p-2 bg-emerald-600 text-white rounded-full shadow-lg hover:bg-emerald-700 transition-colors border-2 border-white dark:border-slate-900 cursor-pointer">
+              <label className="absolute bottom-0 right-0 w-10 h-10 flex items-center justify-center bg-emerald-600 text-white rounded-full shadow-xl hover:bg-emerald-700 transition-all border-4 border-white dark:border-slate-900 cursor-pointer active:scale-90">
                 <Camera size={18} />
                 <input type="file" className="hidden" accept="image/*" onChange={handlePhotoChange} disabled={loading} />
               </label>
             </div>
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white">{profile?.name}</h3>
-            <p className="text-gray-500 dark:text-gray-400 text-sm capitalize mb-6">{profile?.role}</p>
+            <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">{profile?.name}</h3>
+            <p className="text-[10px] text-slate-500 dark:text-slate-400 font-black uppercase tracking-widest mb-8">{profile?.role}</p>
             
-            <div className="space-y-3 text-left">
-              <div className="flex items-center space-x-3 text-sm text-gray-600 dark:text-gray-400 p-3 bg-gray-50 dark:bg-slate-800/50 rounded-xl">
-                <Shield size={18} className="text-emerald-600" />
-                <span>Role: <span className="font-semibold capitalize">{profile?.role}</span></span>
+            <div className="space-y-4 text-left">
+              <div className="flex items-center space-x-4 p-4 bg-slate-50 dark:bg-slate-950/50 rounded-2xl border border-slate-100 dark:border-slate-800">
+                <div className="w-8 h-8 bg-emerald-500/10 text-emerald-600 rounded-lg flex items-center justify-center">
+                  <Shield size={18} />
+                </div>
+                <div>
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Role</p>
+                  <p className="text-sm font-bold text-slate-900 dark:text-white capitalize">{profile?.role}</p>
+                </div>
               </div>
-              <div className="flex items-center space-x-3 text-sm text-gray-600 dark:text-gray-400 p-3 bg-gray-50 dark:bg-slate-800/50 rounded-xl">
-                <Briefcase size={18} className="text-emerald-600" />
-                <span>Dept: <span className="font-semibold">{profile?.department || 'N/A'}</span></span>
+              <div className="flex items-center space-x-4 p-4 bg-slate-50 dark:bg-slate-950/50 rounded-2xl border border-slate-100 dark:border-slate-800">
+                <div className="w-8 h-8 bg-emerald-500/10 text-emerald-600 rounded-lg flex items-center justify-center">
+                  <Briefcase size={18} />
+                </div>
+                <div>
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Department</p>
+                  <p className="text-sm font-bold text-slate-900 dark:text-white">{profile?.department || 'N/A'}</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         {/* Edit Forms */}
-        <div className="lg:col-span-2 space-y-8">
+        <div className="lg:col-span-2 space-y-10">
           {/* Personal Info */}
-          <div className="bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-800 transition-colors">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
-              <User size={22} className="mr-2 text-emerald-600" />
+          <div className="premium-card p-8">
+            <h3 className="text-xl font-black text-slate-900 dark:text-white mb-8 flex items-center tracking-tight">
+              <User size={24} className="mr-3 text-emerald-600" />
               Personal Information
             </h3>
-            <form onSubmit={handleUpdateProfile} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <form onSubmit={handleUpdateProfile} className="space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Full Name</label>
+                  <label className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2 ml-1">Full Name</label>
                   <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                    <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                     <input 
                       type="text"
                       value={formData.name}
                       onChange={(e) => setFormData({...formData, name: e.target.value})}
-                      className="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border-none rounded-2xl focus:ring-2 focus:ring-emerald-500 dark:text-white transition-all"
+                      className="w-full pl-12 pr-5 py-3.5 bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-emerald-500 dark:text-white transition-all font-bold"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email Address</label>
+                  <label className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2 ml-1">Email Address</label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                     <input 
                       type="email"
                       disabled
                       value={formData.email}
-                      className="w-full pl-10 pr-4 py-3 bg-gray-100 dark:bg-slate-800/50 border-none rounded-2xl text-gray-500 cursor-not-allowed"
+                      className="w-full pl-12 pr-5 py-3.5 bg-slate-100 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-2xl text-slate-500 cursor-not-allowed font-bold"
                     />
                   </div>
                 </div>
@@ -208,9 +218,9 @@ export const ProfilePage: React.FC = () => {
                 <button 
                   type="submit"
                   disabled={loading}
-                  className="bg-emerald-600 text-white px-8 py-3 rounded-2xl font-bold hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-600/20 disabled:opacity-50 flex items-center"
+                  className="bg-emerald-600 text-white px-10 py-4 rounded-2xl font-black uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-600/20 disabled:opacity-50 flex items-center active:scale-95"
                 >
-                  {loading && <Loader2 className="animate-spin mr-2" size={18} />}
+                  {loading && <Loader2 className="animate-spin mr-3" size={20} />}
                   Save Changes
                 </button>
               </div>
@@ -218,51 +228,51 @@ export const ProfilePage: React.FC = () => {
           </div>
 
           {/* Security */}
-          <div className="bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-800 transition-colors">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
-              <Lock size={22} className="mr-2 text-emerald-600" />
+          <div className="premium-card p-8">
+            <h3 className="text-xl font-black text-slate-900 dark:text-white mb-8 flex items-center tracking-tight">
+              <Lock size={24} className="mr-3 text-emerald-600" />
               Security & Password
             </h3>
-            <form onSubmit={handleChangePassword} className="space-y-6">
+            <form onSubmit={handleChangePassword} className="space-y-8">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Current Password</label>
+                <label className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2 ml-1">Current Password</label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                   <input 
                     type="password"
                     required
                     value={formData.currentPassword}
                     onChange={(e) => setFormData({...formData, currentPassword: e.target.value})}
-                    className="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border-none rounded-2xl focus:ring-2 focus:ring-emerald-500 dark:text-white transition-all"
+                    className="w-full pl-12 pr-5 py-3.5 bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-emerald-500 dark:text-white transition-all font-bold"
                     placeholder="Enter current password to verify"
                   />
                 </div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">New Password</label>
+                  <label className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2 ml-1">New Password</label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                     <input 
                       type="password"
                       required
                       value={formData.newPassword}
                       onChange={(e) => setFormData({...formData, newPassword: e.target.value})}
-                      className="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border-none rounded-2xl focus:ring-2 focus:ring-emerald-500 dark:text-white transition-all"
+                      className="w-full pl-12 pr-5 py-3.5 bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-emerald-500 dark:text-white transition-all font-bold"
                       placeholder="Min. 6 characters"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Confirm New Password</label>
+                  <label className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2 ml-1">Confirm New Password</label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                     <input 
                       type="password"
                       required
                       value={formData.confirmPassword}
                       onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
-                      className="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border-none rounded-2xl focus:ring-2 focus:ring-emerald-500 dark:text-white transition-all"
+                      className="w-full pl-12 pr-5 py-3.5 bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-emerald-500 dark:text-white transition-all font-bold"
                       placeholder="Repeat new password"
                     />
                   </div>
@@ -272,9 +282,9 @@ export const ProfilePage: React.FC = () => {
                 <button 
                   type="submit"
                   disabled={loading}
-                  className="bg-emerald-600 text-white px-8 py-3 rounded-2xl font-bold hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-600/20 disabled:opacity-50 flex items-center"
+                  className="bg-emerald-600 text-white px-10 py-4 rounded-2xl font-black uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-600/20 disabled:opacity-50 flex items-center active:scale-95"
                 >
-                  {loading && <Loader2 className="animate-spin mr-2" size={18} />}
+                  {loading && <Loader2 className="animate-spin mr-3" size={20} />}
                   Update Password
                 </button>
               </div>

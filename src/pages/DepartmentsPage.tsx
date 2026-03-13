@@ -72,11 +72,11 @@ export const DepartmentsPage: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-10">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Departments</h1>
-          <p className="text-gray-500 dark:text-gray-400">Manage university departments and academic units.</p>
+          <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter">Departments</h1>
+          <p className="text-slate-500 dark:text-slate-400 font-medium">Manage university departments and academic units.</p>
         </div>
         <button 
           onClick={() => {
@@ -84,15 +84,15 @@ export const DepartmentsPage: React.FC = () => {
             setFormData({ name: '', description: '' });
             setIsModalOpen(true);
           }}
-          className="flex items-center space-x-2 bg-emerald-600 text-white px-4 py-2 rounded-xl hover:bg-emerald-700 transition-colors font-medium shadow-sm"
+          className="flex items-center space-x-2 bg-emerald-600 text-white px-6 py-3 rounded-2xl hover:bg-emerald-700 transition-all font-bold shadow-lg shadow-emerald-600/20 active:scale-95"
         >
-          <Plus size={20} />
+          <Plus size={20} strokeWidth={3} />
           <span>Add Department</span>
         </button>
       </div>
 
       {loading ? (
-        <div className="flex justify-center py-12"><Loader2 className="animate-spin text-emerald-600" /></div>
+        <div className="flex justify-center py-20"><Loader2 className="animate-spin text-emerald-600" size={40} /></div>
       ) : (
         <DataTable 
           data={departments}
@@ -100,10 +100,10 @@ export const DepartmentsPage: React.FC = () => {
           title="Departments"
           actions={(dept) => (
             <div className="flex justify-end space-x-2">
-              <button onClick={() => openEdit(dept)} className="p-2 text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+              <button onClick={() => openEdit(dept)} className="p-2.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl hover:bg-emerald-500/20 transition-all">
                 <Edit2 size={16} />
               </button>
-              <button onClick={() => handleDelete(dept.id)} className="p-2 text-gray-400 hover:text-red-600 transition-colors">
+              <button onClick={() => handleDelete(dept.id)} className="p-2.5 bg-red-500/10 text-red-600 rounded-xl hover:bg-red-500/20 transition-all">
                 <Trash2 size={16} />
               </button>
             </div>
@@ -113,32 +113,32 @@ export const DepartmentsPage: React.FC = () => {
 
       {/* Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-gray-100 dark:border-slate-800 transition-colors">
-            <div className="p-6 border-b border-gray-100 dark:border-slate-800 flex justify-between items-center">
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white">{editingDept ? 'Edit Department' : 'Add Department'}</h3>
-              <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/40 backdrop-blur-md">
+          <div className="glass dark:glass-dark rounded-[2.5rem] shadow-2xl w-full max-w-md overflow-hidden border border-white/20 dark:border-white/10 transition-all animate-in fade-in zoom-in duration-300">
+            <div className="p-8 border-b border-white/10 dark:border-white/5 flex justify-between items-center bg-white/5">
+              <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">{editingDept ? 'Edit Department' : 'Add Department'}</h3>
+              <button onClick={() => setIsModalOpen(false)} className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
                 <Plus size={24} className="rotate-45" />
               </button>
             </div>
-            <form onSubmit={handleSubmit} className="p-6 space-y-4">
+            <form onSubmit={handleSubmit} className="p-8 space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Department Name</label>
+                <label className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2 ml-1">Department Name</label>
                 <input 
                   type="text" 
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none transition-colors"
+                  className="w-full px-5 py-3 bg-white/50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 dark:text-white rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-medium"
                   placeholder="e.g. Information Technology"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
+                <label className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2 ml-1">Description</label>
                 <textarea 
                   value={formData.description}
                   onChange={(e) => setFormData({...formData, description: e.target.value})}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none transition-colors"
+                  className="w-full px-5 py-3 bg-white/50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 dark:text-white rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-medium"
                   rows={4}
                   placeholder="Brief description of the department..."
                 />
@@ -146,7 +146,7 @@ export const DepartmentsPage: React.FC = () => {
               <div className="pt-4">
                 <button 
                   type="submit"
-                  className="w-full bg-emerald-600 text-white py-3 rounded-xl font-semibold hover:bg-emerald-700 transition-colors shadow-sm"
+                  className="w-full bg-emerald-600 text-white py-4 rounded-2xl font-black uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-600/20 active:scale-[0.98]"
                 >
                   {editingDept ? 'Update Department' : 'Create Department'}
                 </button>
