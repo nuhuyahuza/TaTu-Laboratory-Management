@@ -18,6 +18,7 @@ import { SettingsPage } from './pages/SettingsPage';
 import { DepartmentsPage } from './pages/DepartmentsPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { ReportsPage } from './pages/ReportsPage';
+import { ModulesPage } from './pages/ModulesPage';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode, roles?: string[] }> = ({ children, roles }) => {
   const { user, profile, loading } = useAuth();
@@ -104,6 +105,12 @@ export default function App() {
           <Route path="/reports" element={
             <ProtectedRoute roles={['admin', 'lecturer']}>
               <ReportsPage />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/modules" element={
+            <ProtectedRoute roles={['admin']}>
+              <ModulesPage />
             </ProtectedRoute>
           } />
 

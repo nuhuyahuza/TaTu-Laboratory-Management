@@ -11,10 +11,11 @@ import {
   orderBy, 
   serverTimestamp,
   increment,
-  limit
+  limit,
+  setDoc
 } from 'firebase/firestore';
 import { db } from '../firebase/config';
-import { Laboratory, Equipment, EquipmentRequest, LabReservation, TimeSlot, UserProfile, Department, Notification, WorkingHours } from '../models/types';
+import { Laboratory, Equipment, EquipmentRequest, LabReservation, TimeSlot, UserProfile, Department, Notification, WorkingHours, ModuleSettings } from '../models/types';
 
 // Notifications
 export const notificationService = {
@@ -229,3 +230,37 @@ export const departmentService = {
         return deleteDoc(doc(db, 'departments', id));
     }
 }
+
+export const moduleSettingsService = {
+  get: async (): Promise<ModuleSettings> => {
+    const docRef = doc(db, 'settings', 'modules');
+    const docSnap = await getDoc(docRef);
+    
+    if (docSnap.exists()) {
+      return { id: docSnap.id, ...docSnap.data() } as ModuleSettings;
+    } else {
+      // Default settings
+      const defaultSettings: Omit<ModuleSettings, 'id'> = {
+        labsEnabled: true,
+        departmentsEnabled: true,
+        equipmentEnabled: true,
+        requestsEnabled: true,
+        reservationsEnabled: true,
+        calendarEnabled: true,
+        reportsEnabled: true,
+        usersEnabled: true,
+        updatedAt: serverTimestamp()
+      };
+      await setDoc(docRef, defaultSettings);
+      return { id: 'modules', ...defaultSettings } as ModuleSettings;
+    }
+  },
+
+  update: async (settings: Partial<ModuleSettings>) => {
+    const docRef = doc(db, 'settings', 'modules');
+    await updateDoc(docRef, {
+      ...settings,
+      updatedAt: serverTimestamp()
+    });
+  }
+};

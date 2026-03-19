@@ -78,6 +78,19 @@ export interface WorkingHours {
   days: string[];
 }
 
+export interface ModuleSettings {
+  id: string;
+  labsEnabled: boolean;
+  departmentsEnabled: boolean;
+  equipmentEnabled: boolean;
+  requestsEnabled: boolean;
+  reservationsEnabled: boolean;
+  calendarEnabled: boolean;
+  reportsEnabled: boolean;
+  usersEnabled: boolean;
+  updatedAt: any;
+}
+
 export interface Department {
   id: string;
   name: string;

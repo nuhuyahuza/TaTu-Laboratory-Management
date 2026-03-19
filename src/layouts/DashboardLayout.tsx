@@ -22,10 +22,10 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { auth } from '../firebase/config';
 import { signOut } from 'firebase/auth';
-import { notificationService } from '../services/db';
-import { Notification } from '../models/types';
+import { Notification, ModuleSettings } from '../models/types';
 import { formatDistanceToNow } from 'date-fns';
 import { motion, AnimatePresence } from 'motion/react';
+import { notificationService, moduleSettingsService } from '../services/db';
 
 const SidebarItem: React.FC<{ to: string, icon: any, label: string, active: boolean }> = ({ to, icon: Icon, label, active }) => (
   <Link
@@ -56,6 +56,19 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [moduleSettings, setModuleSettings] = useState<ModuleSettings | null>(null);
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const data = await moduleSettingsService.get();
+        setModuleSettings(data);
+      } catch (error) {
+        console.error("Error fetching module settings:", error);
+      }
+    };
+    fetchSettings();
+  }, []);
 
   useEffect(() => {
     if (profile?.id) {
@@ -83,18 +96,28 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
 
   const menuItems = [
     { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard', roles: ['admin', 'lecturer', 'student'] },
-    { to: '/labs', icon: FlaskConical, label: 'Laboratories', roles: ['admin'] },
-    { to: '/departments', icon: Briefcase, label: 'Departments', roles: ['admin'] },
-    { to: '/equipment', icon: HardDrive, label: 'Equipment', roles: ['admin'] },
-    { to: '/requests', icon: ClipboardList, label: 'Equipment Requests', roles: ['admin', 'lecturer', 'student'] },
-    { to: '/reservations', icon: Calendar, label: 'Lab Reservations', roles: ['admin', 'lecturer', 'student'] },
-    { to: '/calendar', icon: Calendar, label: 'Calendar', roles: ['admin', 'lecturer', 'student'] },
-    { to: '/reports', icon: TrendingUp, label: 'Reports', roles: ['admin', 'lecturer'] },
-    { to: '/users', icon: Users, label: 'Users', roles: ['admin'] },
+    { to: '/labs', icon: FlaskConical, label: 'Laboratories', roles: ['admin'], moduleKey: 'labsEnabled' },
+    { to: '/departments', icon: Briefcase, label: 'Departments', roles: ['admin'], moduleKey: 'departmentsEnabled' },
+    { to: '/equipment', icon: HardDrive, label: 'Equipment', roles: ['admin'], moduleKey: 'equipmentEnabled' },
+    { to: '/requests', icon: ClipboardList, label: 'Equipment Requests', roles: ['admin', 'lecturer', 'student'], moduleKey: 'requestsEnabled' },
+    { to: '/reservations', icon: Calendar, label: 'Lab Reservations', roles: ['admin', 'lecturer', 'student'], moduleKey: 'reservationsEnabled' },
+    { to: '/calendar', icon: Calendar, label: 'Calendar', roles: ['admin', 'lecturer', 'student'], moduleKey: 'calendarEnabled' },
+    { to: '/reports', icon: TrendingUp, label: 'Reports', roles: ['admin', 'lecturer'], moduleKey: 'reportsEnabled' },
+    { to: '/users', icon: Users, label: 'Users', roles: ['admin'], moduleKey: 'usersEnabled' },
+    { to: '/modules', icon: Briefcase, label: 'Modules & Features', roles: ['admin'] },
     { to: '/settings', icon: Settings, label: 'Settings', roles: ['admin'] },
   ];
 
-  const filteredItems = menuItems.filter(item => item.roles.includes(profile?.role || ''));
+  const filteredItems = menuItems.filter(item => {
+    const hasRole = item.roles.includes(profile?.role || '');
+    if (!hasRole) return false;
+    
+    if (item.moduleKey && moduleSettings) {
+      return moduleSettings[item.moduleKey as keyof ModuleSettings] === true;
+    }
+    
+    return true;
+  });
 
   return (
     <div className={`flex h-screen overflow-hidden transition-colors duration-500 ${theme === 'light' ? 'bg-slate-50' : 'bg-slate-950'}`}>
@@ -110,7 +133,7 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
               <div className="w-10 h-10 bg-emerald-600 rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-500/30 rotate-3 group-hover:rotate-12 transition-transform duration-500">
                 <span className="font-black text-2xl text-white">T</span>
               </div>
-              <span className="font-black text-2xl tracking-tighter text-gradient">TaTU Lab</span>
+              <span className="font-black text-2xl tracking-tighter text-gradient">TTU Lab</span>
             </div>
           )}
           <button 
