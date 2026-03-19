@@ -13,7 +13,7 @@ import {
   XCircle
 } from 'lucide-react';
 import { moduleSettingsService } from '../services/db';
-import { ModuleSettings } from '../models/types';
+import { ModuleSettings, RoleModuleSettings } from '../models/types';
 import { motion } from 'motion/react';
 
 export const ModulesPage: React.FC = () => {
@@ -23,25 +23,21 @@ export const ModulesPage: React.FC = () => {
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
   useEffect(() => {
-    const fetchSettings = async () => {
-      try {
-        const data = await moduleSettingsService.get();
-        setSettings(data);
-      } catch (error) {
-        console.error("Error fetching module settings:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchSettings();
+    const unsubscribe = moduleSettingsService.subscribe((data) => {
+      setSettings(data);
+      setLoading(false);
+    });
+    return () => unsubscribe();
   }, []);
 
-  const handleToggle = (key: string) => {
+  const handleToggle = (role: keyof Omit<ModuleSettings, 'id' | 'updatedAt'>, moduleKey: keyof RoleModuleSettings) => {
     if (!settings) return;
-    const k = key as keyof Omit<ModuleSettings, 'id' | 'updatedAt'>;
     setSettings({
       ...settings,
-      [k]: !settings[k]
+      [role]: {
+        ...settings[role],
+        [moduleKey]: !settings[role][moduleKey]
+      }
     });
   };
 
@@ -69,25 +65,27 @@ export const ModulesPage: React.FC = () => {
   }
 
   const modules = [
-    { key: 'labsEnabled', label: 'Laboratories', icon: FlaskConical, description: 'Manage laboratory rooms and capacities' },
-    { key: 'departmentsEnabled', label: 'Departments', icon: Briefcase, description: 'Organize labs and users by department' },
-    { key: 'equipmentEnabled', label: 'Equipment', icon: HardDrive, description: 'Track lab equipment and inventory' },
-    { key: 'requestsEnabled', label: 'Equipment Requests', icon: ClipboardList, description: 'Handle equipment borrowing requests' },
-    { key: 'reservationsEnabled', label: 'Lab Reservations', icon: Calendar, description: 'Manage lab room bookings' },
-    { key: 'calendarEnabled', label: 'Calendar', icon: Calendar, description: 'Visual schedule of all lab activities' },
-    { key: 'reportsEnabled', label: 'Reports', icon: TrendingUp, description: 'Analytics and usage statistics' },
-    { key: 'usersEnabled', label: 'Users', icon: Users, description: 'Manage system users and permissions' },
+    { key: 'labs', label: 'Laboratories', icon: FlaskConical, description: 'Manage laboratory rooms and capacities' },
+    { key: 'departments', label: 'Departments', icon: Briefcase, description: 'Organize labs and users by department' },
+    { key: 'equipment', label: 'Equipment', icon: HardDrive, description: 'Track lab equipment and inventory' },
+    { key: 'requests', label: 'Equipment Requests', icon: ClipboardList, description: 'Handle equipment borrowing requests' },
+    { key: 'reservations', label: 'Lab Reservations', icon: Calendar, description: 'Manage lab room bookings' },
+    { key: 'calendar', label: 'Calendar', icon: Calendar, description: 'Visual schedule of all lab activities' },
+    { key: 'reports', label: 'Reports', icon: TrendingUp, description: 'Analytics and usage statistics' },
+    { key: 'users', label: 'Users', icon: Users, description: 'Manage system users and permissions' },
   ];
 
+  const roles: (keyof Omit<ModuleSettings, 'id' | 'updatedAt'>)[] = ['admin', 'lecturer', 'student'];
+
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 pb-20">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
         <div>
           <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter">
             Modules & <span className="text-gradient">Features</span>
           </h1>
           <p className="text-slate-500 dark:text-slate-400 font-medium text-lg">
-            Enable or disable system modules to customize your experience.
+            Enable or disable system modules per user role.
           </p>
         </div>
         <button 
@@ -113,43 +111,56 @@ export const ModulesPage: React.FC = () => {
         </motion.div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {modules.map((mod) => {
-          const Icon = mod.icon;
-          const isEnabled = settings?.[mod.key as keyof ModuleSettings] as boolean;
-
-          return (
-            <motion.div
-              key={mod.key}
-              whileHover={{ y: -5 }}
-              className={`premium-card p-6 cursor-pointer border-2 transition-all ${
-                isEnabled ? 'border-emerald-500/50 bg-emerald-500/5' : 'border-transparent'
-              }`}
-              onClick={() => handleToggle(mod.key as keyof ModuleSettings)}
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${
-                  isEnabled ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : 'bg-slate-100 dark:bg-slate-800 text-slate-400'
-                }`}>
-                  <Icon size={24} />
-                </div>
-                <div className={`w-12 h-6 rounded-full relative transition-colors ${
-                  isEnabled ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'
-                }`}>
-                  <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${
-                    isEnabled ? 'left-7' : 'left-1'
-                  }`} />
-                </div>
-              </div>
-              <h3 className={`text-xl font-black mb-2 ${isEnabled ? 'text-slate-900 dark:text-white' : 'text-slate-400 dark:text-slate-500'}`}>
-                {mod.label}
-              </h3>
-              <p className="text-sm text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
-                {mod.description}
-              </p>
-            </motion.div>
-          );
-        })}
+      <div className="overflow-x-auto rounded-[2.5rem] glass dark:glass-dark border border-white/20 dark:border-white/10 shadow-2xl">
+        <table className="w-full text-left border-collapse">
+          <thead>
+            <tr className="border-b border-white/10 dark:border-white/5">
+              <th className="p-8 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Module</th>
+              {roles.map(role => (
+                <th key={role} className="p-8 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] text-center">
+                  {role}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {modules.map((mod) => {
+              const Icon = mod.icon;
+              return (
+                <tr key={mod.key} className="border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors group">
+                  <td className="p-8">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <Icon size={24} />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-black text-slate-900 dark:text-white tracking-tight">{mod.label}</h3>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">{mod.description}</p>
+                      </div>
+                    </div>
+                  </td>
+                  {roles.map(role => {
+                    const isEnabled = settings?.[role]?.[mod.key as keyof RoleModuleSettings];
+                    return (
+                      <td key={role} className="p-8 text-center">
+                        <button
+                          onClick={() => handleToggle(role, mod.key as keyof RoleModuleSettings)}
+                          className={`w-14 h-7 rounded-full relative transition-all duration-500 ${
+                            isEnabled ? 'bg-emerald-500 shadow-lg shadow-emerald-500/30' : 'bg-slate-200 dark:bg-slate-800'
+                          }`}
+                        >
+                          <div className={`absolute top-1 w-5 h-5 bg-white rounded-full transition-all duration-500 shadow-sm ${
+                            isEnabled ? 'left-8' : 'left-1'
+                          }`} />
+                        </button>
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
     </div>
   );

@@ -22,7 +22,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { auth } from '../firebase/config';
 import { signOut } from 'firebase/auth';
-import { Notification, ModuleSettings } from '../models/types';
+import { Notification, ModuleSettings, RoleModuleSettings } from '../models/types';
 import { formatDistanceToNow } from 'date-fns';
 import { motion, AnimatePresence } from 'motion/react';
 import { notificationService, moduleSettingsService } from '../services/db';
@@ -59,15 +59,10 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
   const [moduleSettings, setModuleSettings] = useState<ModuleSettings | null>(null);
 
   useEffect(() => {
-    const fetchSettings = async () => {
-      try {
-        const data = await moduleSettingsService.get();
-        setModuleSettings(data);
-      } catch (error) {
-        console.error("Error fetching module settings:", error);
-      }
-    };
-    fetchSettings();
+    const unsubscribe = moduleSettingsService.subscribe((data) => {
+      setModuleSettings(data);
+    });
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
@@ -96,27 +91,29 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
 
   const menuItems = [
     { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard', roles: ['admin', 'lecturer', 'student'] },
-    { to: '/labs', icon: FlaskConical, label: 'Laboratories', roles: ['admin'], moduleKey: 'labsEnabled' },
-    { to: '/departments', icon: Briefcase, label: 'Departments', roles: ['admin'], moduleKey: 'departmentsEnabled' },
-    { to: '/equipment', icon: HardDrive, label: 'Equipment', roles: ['admin'], moduleKey: 'equipmentEnabled' },
-    { to: '/requests', icon: ClipboardList, label: 'Equipment Requests', roles: ['admin', 'lecturer', 'student'], moduleKey: 'requestsEnabled' },
-    { to: '/reservations', icon: Calendar, label: 'Lab Reservations', roles: ['admin', 'lecturer', 'student'], moduleKey: 'reservationsEnabled' },
-    { to: '/calendar', icon: Calendar, label: 'Calendar', roles: ['admin', 'lecturer', 'student'], moduleKey: 'calendarEnabled' },
-    { to: '/reports', icon: TrendingUp, label: 'Reports', roles: ['admin', 'lecturer'], moduleKey: 'reportsEnabled' },
-    { to: '/users', icon: Users, label: 'Users', roles: ['admin'], moduleKey: 'usersEnabled' },
+    { to: '/labs', icon: FlaskConical, label: 'Laboratories', roles: ['admin', 'lecturer', 'student'], moduleKey: 'labs' },
+    { to: '/departments', icon: Briefcase, label: 'Departments', roles: ['admin', 'lecturer', 'student'], moduleKey: 'departments' },
+    { to: '/equipment', icon: HardDrive, label: 'Equipment', roles: ['admin', 'lecturer', 'student'], moduleKey: 'equipment' },
+    { to: '/requests', icon: ClipboardList, label: 'Equipment Requests', roles: ['admin', 'lecturer', 'student'], moduleKey: 'requests' },
+    { to: '/reservations', icon: Calendar, label: 'Lab Reservations', roles: ['admin', 'lecturer', 'student'], moduleKey: 'reservations' },
+    { to: '/calendar', icon: Calendar, label: 'Calendar', roles: ['admin', 'lecturer', 'student'], moduleKey: 'calendar' },
+    { to: '/reports', icon: TrendingUp, label: 'Reports', roles: ['admin', 'lecturer', 'student'], moduleKey: 'reports' },
+    { to: '/users', icon: Users, label: 'Users', roles: ['admin', 'lecturer', 'student'], moduleKey: 'users' },
     { to: '/modules', icon: Briefcase, label: 'Modules & Features', roles: ['admin'] },
     { to: '/settings', icon: Settings, label: 'Settings', roles: ['admin'] },
   ];
 
   const filteredItems = menuItems.filter(item => {
-    const hasRole = item.roles.includes(profile?.role || '');
-    if (!hasRole) return false;
-    
-    if (item.moduleKey && moduleSettings) {
-      return moduleSettings[item.moduleKey as keyof ModuleSettings] === true;
+    // If it's a module-controlled item, use the settings
+    if (item.moduleKey && moduleSettings && profile?.role) {
+      const roleSettings = moduleSettings[profile.role as keyof Omit<ModuleSettings, 'id' | 'updatedAt'>];
+      if (roleSettings) {
+        return roleSettings[item.moduleKey as keyof RoleModuleSettings] === true;
+      }
     }
     
-    return true;
+    // Fallback to role-based check for non-module items or while loading
+    return item.roles.includes(profile?.role || '');
   });
 
   return (

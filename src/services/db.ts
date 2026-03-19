@@ -12,10 +12,11 @@ import {
   serverTimestamp,
   increment,
   limit,
-  setDoc
+  setDoc,
+  onSnapshot
 } from 'firebase/firestore';
 import { db } from '../firebase/config';
-import { Laboratory, Equipment, EquipmentRequest, LabReservation, TimeSlot, UserProfile, Department, Notification, WorkingHours, ModuleSettings } from '../models/types';
+import { Laboratory, Equipment, EquipmentRequest, LabReservation, TimeSlot, UserProfile, Department, Notification, WorkingHours, ModuleSettings, RoleModuleSettings } from '../models/types';
 
 // Notifications
 export const notificationService = {
@@ -236,24 +237,55 @@ export const moduleSettingsService = {
     const docRef = doc(db, 'settings', 'modules');
     const docSnap = await getDoc(docRef);
     
+    const allOn: RoleModuleSettings = {
+      labs: true,
+      departments: true,
+      equipment: true,
+      requests: true,
+      reservations: true,
+      calendar: true,
+      reports: true,
+      users: true
+    };
+
+    const allOff: RoleModuleSettings = {
+      labs: false,
+      departments: false,
+      equipment: false,
+      requests: false,
+      reservations: false,
+      calendar: false,
+      reports: false,
+      users: false
+    };
+    
+    const defaultSettings: Omit<ModuleSettings, 'id'> = {
+      admin: { ...allOn },
+      lecturer: { ...allOff }, // Off by default as requested
+      student: { ...allOff },  // Off by default as requested
+      updatedAt: serverTimestamp()
+    };
+
     if (docSnap.exists()) {
-      return { id: docSnap.id, ...docSnap.data() } as ModuleSettings;
+      const data = docSnap.data();
+      if (!data.admin || !data.lecturer || !data.student) {
+        await setDoc(docRef, defaultSettings);
+        return { id: 'modules', ...defaultSettings } as ModuleSettings;
+      }
+      return { id: docSnap.id, ...data } as ModuleSettings;
     } else {
-      // Default settings
-      const defaultSettings: Omit<ModuleSettings, 'id'> = {
-        labsEnabled: true,
-        departmentsEnabled: true,
-        equipmentEnabled: true,
-        requestsEnabled: true,
-        reservationsEnabled: true,
-        calendarEnabled: true,
-        reportsEnabled: true,
-        usersEnabled: true,
-        updatedAt: serverTimestamp()
-      };
       await setDoc(docRef, defaultSettings);
       return { id: 'modules', ...defaultSettings } as ModuleSettings;
     }
+  },
+
+  subscribe: (callback: (settings: ModuleSettings) => void) => {
+    const docRef = doc(db, 'settings', 'modules');
+    return onSnapshot(docRef, (docSnap) => {
+      if (docSnap.exists()) {
+        callback({ id: docSnap.id, ...docSnap.data() } as ModuleSettings);
+      }
+    });
   },
 
   update: async (settings: Partial<ModuleSettings>) => {

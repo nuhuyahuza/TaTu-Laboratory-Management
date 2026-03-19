@@ -49,19 +49,19 @@ export default function App() {
           } />
           
           <Route path="/labs" element={
-            <ProtectedRoute roles={['admin']}>
+            <ProtectedRoute roles={['admin', 'lecturer', 'student']}>
               <LabsPage />
             </ProtectedRoute>
           } />
 
           <Route path="/departments" element={
-            <ProtectedRoute roles={['admin']}>
+            <ProtectedRoute roles={['admin', 'lecturer', 'student']}>
               <DepartmentsPage />
             </ProtectedRoute>
           } />
           
           <Route path="/equipment" element={
-            <ProtectedRoute roles={['admin']}>
+            <ProtectedRoute roles={['admin', 'lecturer', 'student']}>
               <EquipmentPage />
             </ProtectedRoute>
           } />
@@ -85,7 +85,7 @@ export default function App() {
           } />
           
           <Route path="/users" element={
-            <ProtectedRoute roles={['admin']}>
+            <ProtectedRoute roles={['admin', 'lecturer', 'student']}>
               <UsersPage />
             </ProtectedRoute>
           } />
@@ -103,7 +103,7 @@ export default function App() {
           } />
 
           <Route path="/reports" element={
-            <ProtectedRoute roles={['admin', 'lecturer']}>
+            <ProtectedRoute roles={['admin', 'lecturer', 'student']}>
               <ReportsPage />
             </ProtectedRoute>
           } />
